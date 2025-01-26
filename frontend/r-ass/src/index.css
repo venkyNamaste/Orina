@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+.custom-date-picker {
+  border: none;
+  outline: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 8px;
+  background: linear-gradient(to right, #00796B, #00A896);
+  color: #fff;
+  cursor: pointer;
+}
+
+.custom-date-picker:hover {
+  background: linear-gradient(to right, #006A67, #4DD0D0);
+}
+
+.react-datepicker__day--selected {
+  background: #00796B !important;
+  color: #fff !important;
+}
+
+.react-datepicker__day--keyboard-selected {
+  background: #00A896 !important;
+  color: #fff !important;
+}
+
+  
+
+  /* Branding Animation */
+.animate-pulse {
+    animation: pulse 2s infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% {
+      transform: scale(1);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+    }
+    50% {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    }
+  }
+  

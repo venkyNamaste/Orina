@@ -1,0 +1,64 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+.custom-date-picker {
+  border: none;
+  outline: none;
+  padding: 8px 12px;
+  font-size: 14px;
+  border-radius: 8px;
+  background: linear-gradient(to right, #6C5CE7, #A66BFF);
+  color: #fff;
+  cursor: pointer;
+}
+
+.custom-date-picker:hover {
+  background: linear-gradient(to right, #5C67F2, #8896FF);
+}
+
+.react-datepicker__day--selected {
+  background: #5C67F2 !important;
+  color: #fff !important;
+}
+
+.react-datepicker__day--keyboard-selected {
+  background: #A66BFF !important;
+  color: #fff !important;
+}
