@@ -92,35 +92,37 @@ const sendNotification = async (email, name, candidateName, position, contact, p
 
 
 const scheduleNotifications = async (task, email, name) => {
-    // Always interpret `pickupDateTime` as UTC
-    const taskTime = new Date(task.pickupDateTime).toISOString(); // Ensure it's in UTC
+    const taskTime = new Date(task.pickupDateTime); // Assume UTC
+    console.log("Task Time (UTC):", taskTime.toISOString());
 
     const reminderTimes = [
-        { time: new Date(new Date(taskTime).getTime() - 30 * 60 * 1000), type: "30-min" }, // 30 minutes before
-        { time: new Date(new Date(taskTime).getTime() - 5 * 60 * 1000), type: "5-min" },  // 5 minutes before
+        { time: new Date(taskTime.getTime() - 30 * 60 * 1000), type: "30-min" },
+        { time: new Date(taskTime.getTime() - 5 * 60 * 1000), type: "5-min" },
     ];
+
+    console.log("Reminder Times (Calculated):", reminderTimes);
 
     reminderTimes.forEach(({ time, type }) => {
         if (time > new Date()) {
+            console.log(`Scheduling reminder for ${type} at ${time.toISOString()}`);
             schedule.scheduleJob(time, async () => {
+                console.log(`Reminder triggered for ${type} at ${new Date().toISOString()}`);
                 await sendNotification(
                     email,
                     name,
-                    task.name,          // Candidate Name
-                    task.position,      // Position
-                    task.contact,       // Contact
-                    task.pickupDateTime,// Pickup DateTime
-                    type                // Reminder Type
+                    task.name,
+                    task.position,
+                    task.contact,
+                    task.pickupDateTime,
+                    type
                 );
-
-                // Update remindersSent field in the database
-                await Task.findByIdAndUpdate(task._id, {
-                    $push: { remindersSent: formatUTC(time) }, // Save the formatted reminder time
-                });
             });
+        } else {
+            console.log(`Skipped scheduling ${type}, time is in the past: ${time.toISOString()}`);
         }
     });
 };
+
 
 
 
@@ -242,6 +244,7 @@ taskRouter.post("/save", authMiddleware, async (req, res) => {
 
         // Save the task
         const task = new Task(req.body);
+        console.log("Saving task:", task);
         await task.save();
 
         // Send immediate email notification
