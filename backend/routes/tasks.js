@@ -7,13 +7,25 @@ const Mailjet = require('node-mailjet');
 const authMiddleware = require("../middleware/authMiddleware");
 const Usermodel = require("../models/User");
 
+const formatUTC = (dateTime) => {
+    return new Date(dateTime).toLocaleString("en-GB", {
+        timeZone: "UTC",
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+    });
+};
+
 const sendNotification = async (email, name, candidateName, position, contact, pickupDateTime, reminderType = "creation") => {
     console.log("Sending notification");
     console.log("email: ", email);
     console.log("name: ", name);
     console.log("pickupDateTime: ", pickupDateTime);
 
-    const formattedDate = new Date(pickupDateTime).toLocaleString();
+    const formattedDate = formatUTC(pickupDateTime); 
 
     // Custom subject based on reminderType
     let subject = `Task Reminder for ${name}`;
@@ -101,7 +113,7 @@ const scheduleNotifications = async (task, email, name) => {
 
                 // Update remindersSent field in the database
                 await Task.findByIdAndUpdate(task._id, {
-                    $push: { remindersSent: time },
+                    $push: { remindersSent: formatUTC(time) }, // Save the formatted reminder time
                 });
             });
         }
