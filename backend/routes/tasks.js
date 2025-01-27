@@ -91,16 +91,20 @@ const sendNotification = async (email, name, candidateName, position, contact, p
 
 
 
-const scheduleNotifications = async (candidatename,position,contact, pickupDateTime, email, name) => {
-    const taskTime = new Date(pickupDateTime); // Assume UTC
-    console.log("Task Time (UTC):", taskTime);
+const scheduleNotifications = async (candidateName, position, contact, pickupDateTime, email, name) => {
+    // Convert pickupDateTime (IST) to UTC
+    const taskTimeIST = new Date(pickupDateTime); // Treat input as IST
+    const taskTimeUTC = new Date(taskTimeIST.getTime() - 5.5 * 60 * 60 * 1000); // Convert IST to UTC
+    console.log("Task Time (IST):", taskTimeIST.toISOString());
+    console.log("Task Time (UTC):", taskTimeUTC.toISOString());
 
+    // Calculate reminder times in UTC
     const reminderTimes = [
-        { time: new Date(taskTime.getTime() - 30 * 60 * 1000), type: "30-min" },
-        { time: new Date(taskTime.getTime() - 5 * 60 * 1000), type: "5-min" },
+        { time: new Date(taskTimeUTC.getTime() - 30 * 60 * 1000), type: "30-min" },
+        { time: new Date(taskTimeUTC.getTime() - 5 * 60 * 1000), type: "5-min" },
     ];
 
-    console.log("Reminder Times (Calculated):", reminderTimes);
+    console.log("Reminder Times (UTC):", reminderTimes);
 
     reminderTimes.forEach(({ time, type }) => {
         if (time > new Date()) {
@@ -110,10 +114,10 @@ const scheduleNotifications = async (candidatename,position,contact, pickupDateT
                 await sendNotification(
                     email,
                     name,
-                    candidatename,
+                    candidateName,
                     position,
                     contact,
-                    pickupDateTime,
+                    pickupDateTime, // Keep original IST time for the email
                     type
                 );
             });
@@ -122,6 +126,7 @@ const scheduleNotifications = async (candidatename,position,contact, pickupDateT
         }
     });
 };
+
 
 
 
