@@ -92,10 +92,12 @@ const sendNotification = async (email, name, candidateName, position, contact, p
 
 
 const scheduleNotifications = async (task, email, name) => {
-    const taskTime = new Date(task.pickupDateTime);
+    // Always interpret `pickupDateTime` as UTC
+    const taskTime = new Date(task.pickupDateTime).toISOString(); // Ensure it's in UTC
+
     const reminderTimes = [
-        { time: new Date(taskTime.getTime() - 30 * 60 * 1000), type: "30-min" }, // 30 minutes before
-        { time: new Date(taskTime.getTime() - 5 * 60 * 1000), type: "5-min" },  // 5 minutes before
+        { time: new Date(new Date(taskTime).getTime() - 30 * 60 * 1000), type: "30-min" }, // 30 minutes before
+        { time: new Date(new Date(taskTime).getTime() - 5 * 60 * 1000), type: "5-min" },  // 5 minutes before
     ];
 
     reminderTimes.forEach(({ time, type }) => {
@@ -119,6 +121,7 @@ const scheduleNotifications = async (task, email, name) => {
         }
     });
 };
+
 
 
 
@@ -234,6 +237,9 @@ taskRouter.post("/save", authMiddleware, async (req, res) => {
         // Add userId to the task body
         req.body.userId = req.user.Rid;
 
+        // Convert pickupDateTime to UTC
+        req.body.pickupDateTime = new Date(req.body.pickupDateTime).toISOString();
+
         // Save the task
         const task = new Task(req.body);
         await task.save();
@@ -250,6 +256,7 @@ taskRouter.post("/save", authMiddleware, async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 });
+
 
 
 
