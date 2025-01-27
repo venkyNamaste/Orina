@@ -59,6 +59,18 @@ const TaskManagement = () => {
         setPage(0); // Reset to first page
     };
 
+    const formatUTC = (dateTime) => {
+        return new Date(dateTime).toLocaleString("en-GB", {
+          timeZone: "UTC",
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: true,
+        });
+      };
+
     return (
         <Box sx={{ display: "flex", height: "100vh" }}>
             
@@ -119,7 +131,7 @@ const TaskManagement = () => {
                                         >
                                             <TableCell>{task.name}</TableCell>
                                             <TableCell>{task.position}</TableCell>
-                                            <TableCell>{new Date(task.pickupDateTime).toLocaleString()}</TableCell>
+                                            <TableCell>{formatUTC(task.pickupDateTime)}</TableCell>
                                             <TableCell>{task.location}</TableCell>
                                             <TableCell>
                                                 <Box
