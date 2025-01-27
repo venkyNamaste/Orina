@@ -50,11 +50,6 @@ const sendDailyCandidateReport = async () => {
                 }
             });
 
-            const formattedBreakTime = `${Math.floor(totalBreakTime / 60)}m ${totalBreakTime % 60}s`;
-            const formattedExceededTime = totalExceededTime > 0 
-                ? `${Math.floor(totalExceededTime / 60)}m ${totalExceededTime % 60}s` 
-                : '0m 0s';
-
             // 📚 Motivation Message
             let motivationMessage = "Keep up the great work!";
             if (totalCandidates > 10) {
@@ -63,9 +58,6 @@ const sendDailyCandidateReport = async () => {
                 motivationMessage = "No candidates were added yesterday. Let's make today count!";
             }
 
-            let breakQuote = totalExceededTime > 0 
-                ? "Remember, balanced breaks improve productivity. Keep it steady!"
-                : "Great time management on your breaks! Keep it up!";
 
             // 📧 Send email using Mailjet
             const mailjet = new Mailjet({
@@ -95,13 +87,6 @@ const sendDailyCandidateReport = async () => {
                                 <li><b>Email Sent:</b> ${emailSentCount}</li>
                                 <li><b>Submitted:</b> ${submittedCount}</li>
                             </ul>
-
-                            <h3>🕒 Break Summary</h3>
-                            <ul>
-                                <li><b>Total Break Time:</b> ${formattedBreakTime}</li>
-                                <li><b>Exceeded Break Time:</b> ${formattedExceededTime}</li>
-                            </ul>
-                            <p><i>${breakQuote}</i></p>
 
                             <p style="margin-top:20px;"><b>${motivationMessage}</b></p>
                             <p>Let's make today even better!</p>

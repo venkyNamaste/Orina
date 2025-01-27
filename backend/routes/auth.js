@@ -61,7 +61,6 @@ authRouter.post("/signup", async (req, res) => {
                           <li><strong>Add Candidates Easily:</strong> Directly add candidates or seamlessly import them from your Excel file.</li>
                           <li><strong>Advanced Filters:</strong> Apply seamless and easy filters to manage candidates efficiently.</li>
                           <li><strong>Timely Task Reminders:</strong> Stay on top of your tasks with automated reminders.</li>
-                          <li><strong>Break Tracker:</strong> Efficiently manage breaks and improve productivity.</li>
                           <li><strong>Job Description Formatter & Boolean Generator:</strong> Easily create and format job descriptions with powerful tools.</li>
                           <li><strong>And much more...</strong></li>
                       </ul>
@@ -213,7 +212,7 @@ authRouter.post("/forget-password", async (req, res) => {
     });
 
     // TODO: Send email with reset link (e.g., `/reset-password?token=RESET_TOKEN`)
-    console.log(`Reset Link: http://localhost:3000/reset-password?token=${resetToken}`);
+
       const mailjet = new Mailjet({
             apiKey: process.env.MAIL_JET_API,
             apiSecret: process.env.MAIL_JET_SECRET_KEY
@@ -235,7 +234,7 @@ authRouter.post("/forget-password", async (req, res) => {
                         HTMLPart: `
                             <p>Hello there,</p>
                             <p>You requested a password reset.</p>
-                            <p>Click <a href="http://localhost:3000/reset-password?token=${resetToken}">here</a> to reset your password.</p>
+                            <p>Click <a href="https://orina.in/reset-password?token=${resetToken}">here</a> to reset your password.</p>
                             <p>Thank you!</p>
                             <h4>Team Orina</h4>
                         `,
