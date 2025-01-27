@@ -91,9 +91,9 @@ const sendNotification = async (email, name, candidateName, position, contact, p
 
 
 
-const scheduleNotifications = async (task, email, name) => {
-    const taskTime = new Date(task.pickupDateTime); // Assume UTC
-    console.log("Task Time (UTC):", taskTime.toISOString());
+const scheduleNotifications = async (candidatename,position,contact, pickupDateTime, email, name) => {
+    const taskTime = new Date(pickupDateTime); // Assume UTC
+    console.log("Task Time (UTC):", taskTime);
 
     const reminderTimes = [
         { time: new Date(taskTime.getTime() - 30 * 60 * 1000), type: "30-min" },
@@ -110,10 +110,10 @@ const scheduleNotifications = async (task, email, name) => {
                 await sendNotification(
                     email,
                     name,
-                    task.name,
-                    task.position,
-                    task.contact,
-                    task.pickupDateTime,
+                    candidatename,
+                    position,
+                    contact,
+                    pickupDateTime,
                     type
                 );
             });
@@ -244,6 +244,8 @@ taskRouter.post("/save", authMiddleware, async (req, res) => {
 
         // Save the task
         const task = new Task(req.body);
+        console.log("About to save task to the database...");
+
         console.log("Saving task:", task);
         await task.save();
 
@@ -251,7 +253,7 @@ taskRouter.post("/save", authMiddleware, async (req, res) => {
         await sendNotification(findUser.email, findUser.name, req.body.name, req.body.position, req.body.contact, task.pickupDateTime);
 
         // Schedule reminders
-        await scheduleNotifications(task, findUser.email, findUser.name);
+        await scheduleNotifications(req.body.name, req.body.position, req.body.contact,req.body.pickupDateTime, findUser.email, findUser.name);
 
         res.status(201).json(task);
     } catch (error) {
